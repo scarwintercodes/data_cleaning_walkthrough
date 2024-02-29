@@ -8,7 +8,6 @@ output:
   pdf_document: default
 ---
 
-## Install and load libraries
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -19,9 +18,8 @@ library(here)
 library(tidyverse)
 ```
 
-## Confirm working directory
 
-```{r set wd using here package}
+```{r,include=FALSE}
 
 here()
 ```
@@ -333,7 +331,7 @@ We see most date formats are in m/dd/yyyy, but some are in dd/m/yyyy format. We 
 
 We will load the [lubridate()](https://lubridate.tidyverse.org/) library from the tidyverse in order to work with date formats.
 
-```{r}
+```{r, include=FALSE}
 #load library
 library(lubridate)
 
@@ -345,7 +343,7 @@ rawdata %>% filter(is.na(birth_date))
 
 Let's use guess_formats() from lubridate to make sure R is correctly reading these dates.
 
-```{r}
+```{r, include=FALSE}
 
 guess_formats(rawdata$birth_date, c("mdy", "dmy", "ymd"))
 

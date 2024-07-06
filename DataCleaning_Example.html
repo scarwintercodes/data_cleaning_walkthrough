@@ -356,6 +356,72 @@ display: none;
 </div>
 
 
+<div id="intro-level-data-cleaning-walkthrough" class="section level2">
+<h2>Intro-Level Data Cleaning Walkthrough</h2>
+<p>Before we can use our dataset to tell a story, we first need to make
+sure the words used to tell the story make sense.</p>
+<p>What I mean by that is: We need to ensure our dataset is clean! This
+means: - Sensible data types - Remove special characters which impact
+readability - Remove or normalize blanks - Distinguish between NA’s,
+nulls, blanks</p>
+<p>We will use a sample dataset containing interview respondents from
+Chicago, New York, and Los Angeles. The dataset contains these
+columns:</p>
+<ul>
+<li><em>ID:</em> sequential ID from interview respondents</li>
+<li><em>birth_date:</em> mm/dd/yyyy format</li>
+<li><em>gender_string:</em> Respondent gender identity
+<ul>
+<li>Male</li>
+<li>Female</li>
+<li>Questioning</li>
+<li>Non-binary/Genderqueer/Third gender</li>
+<li>Prefer Not to Say</li>
+</ul></li>
+<li><em>gender_modality:</em> Flag denoting whether respondent
+identifies as transgender
+<ul>
+<li>1 = Transgender</li>
+<li>2 = Cisgender</li>
+</ul></li>
+<li><em>sexuality:</em> Sexual Identity
+<ul>
+<li>1 = Gay</li>
+<li>2 = Lesbian</li>
+<li>3 = Bisexual</li>
+<li>4 = Queer</li>
+<li>5 = Questioning</li>
+<li>6 = Heterosexual</li>
+</ul></li>
+<li><em>race_eth:</em> race-ethnicity, <u>see codebook for
+definitions</u></li>
+<li><em>latinx_hispanic:</em> Yes/No flag Hispanic status
+<ul>
+<li>1 = Yes</li>
+<li>0 = No</li>
+</ul></li>
+<li><em>location:</em> Numeric code for cities
+<ul>
+<li>1 = Chicago</li>
+<li>2 = New York</li>
+<li>3 = Los Angeles</li>
+</ul></li>
+<li><em>location_string:</em> Readable city variable</li>
+<li><em>interview_year:</em> Year of interview ranging from
+2010-2019</li>
+<li><em>interview_month:</em> Numerical month indicator (Gregorian
+calendar)
+<ul>
+<li>1 = January …</li>
+</ul></li>
+<li><em>interview_date:</em> mm/dd/yyyy format</li>
+<li><em>dctr_6months:</em> Flag indicating if interviewee visited the
+doctor in the 6 months prior to the <strong>interview_date</strong></li>
+<li><em>zip_code:</em> Residential ZIP code of interviewee</li>
+</ul>
+<p>Let’s start by setting up our environment.</p>
+<pre class="r"><code>here()</code></pre>
+<pre><code>## [1] &quot;R:/ISGMH/EDIT/Projects/R01 YRBS Alcohol Disparities/Data/SOP/Data Analysis in R&quot;</code></pre>
 <p><em>For more info on why we use {here} instead of setwd(), check out
 these articles:</em></p>
 <p><a href="https://github.com/jennybc/here_here">Jenny Bryan:
@@ -363,6 +429,7 @@ here_here</a></p>
 <p><a href="https://malco.io/2018/11/05/why-should-i-use-the-here-package-when-i-m-already-using-projects/">Malcolm
 Barrett: Why should I use the here package when I’m already using
 projects?</a></p>
+</div>
 <div id="load-data" class="section level2">
 <h2>Load Data</h2>
 <pre class="r"><code>#load data we will explore and manipulate
@@ -535,8 +602,8 @@ glimpse(rawdata)</code></pre>
 ## $ dctr_6months    &lt;chr&gt; &quot;1&quot;, &quot;0&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;0&quot;, &quot;1&quot;, &quot;0&quot;,…
 ## $ zip_code        &lt;int&gt; 60612, 60613, 60606, 60612, 60614, 10348, 60614, 90001…</code></pre>
 </div>
-<div id="race_eth-latinx_hispanic-and-interview_month." class="section level5">
-<h5>race_eth, latinx_hispanic, and interview_month.</h5>
+<div id="race_eth-latinx_hispanic-and-interview_month" class="section level5">
+<h5>race_eth, latinx_hispanic, and interview_month</h5>
 <pre class="r"><code>#convert race_eth to char
 rawdata$race_eth &lt;- as.character(rawdata$race_eth)
 
@@ -1026,6 +1093,9 @@ location_string align, and remove cases where they mismatch.</p>
 #             gender_string == &quot;Transgender Male&quot; ~ 1,
 #             gender_string == NA ~ NA)</code></pre>
 </div>
+</div>
+<div id="next-steps" class="section level3">
+<h3>Next steps:</h3>
 <div id="breakdown-race_ethnicity-and-yn-hispanic-to-get-break-down-of-afro-latinx-folks" class="section level4">
 <h4>Breakdown race_ethnicity and yn hispanic to get break down of
 Afro-Latinx folks</h4>

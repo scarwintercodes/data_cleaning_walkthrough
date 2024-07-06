@@ -3,9 +3,9 @@ title: "Example Data Cleaning Script"
 author: "Scar Winter Kelsey"
 date: "6/18/2021"
 output:
-  html_document: default
-  word_document: default
   pdf_document: default
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -18,8 +18,55 @@ library(here)
 library(tidyverse)
 ```
 
+## Intro-Level Data Cleaning Walkthrough
 
-```{r,include=FALSE}
+Before we can use our dataset to tell a story, we first need to make sure the words used to tell the story make sense.
+
+What I mean by that is: We need to ensure our dataset is clean! This means:
+- Sensible data types
+- Remove special characters which impact readability
+- Remove or normalize blanks
+- Distinguish between NA's, nulls, blanks
+
+We will use a sample dataset containing interview respondents from Chicago, New York, and Los Angeles. The dataset contains these columns:
+
+-   *ID:* sequential ID from interview respondents
+-   *birth_date:* mm/dd/yyyy format
+-   *gender_string:* Respondent gender identity
+    -   Male
+    -   Female
+    -   Questioning
+    -   Non-binary/Genderqueer/Third gender
+    -   Prefer Not to Say
+-   *gender_modality:* Flag denoting whether respondent identifies as transgender
+    -   1 = Transgender
+    -   2 = Cisgender
+-   *sexuality:* Sexual Identity
+    -   1 = Gay
+    -   2 = Lesbian
+    -   3 = Bisexual
+    -   4 = Queer
+    -   5 = Questioning
+    -   6 = Heterosexual
+-   *race_eth:* race-ethnicity, [see codebook for definitions]{.underline}
+-   *latinx_hispanic:* Yes/No flag Hispanic status
+    -   1 = Yes
+    -   0 = No
+-   *location:* Numeric code for cities
+    -   1 = Chicago
+    -   2 = New York
+    -   3 = Los Angeles
+-   *location_string:* Readable city variable
+-   *interview_year:* Year of interview ranging from 2010-2019
+-   *interview_month:* Numerical month indicator (Gregorian calendar)
+    -   1 = January ...
+-   *interview_date:* mm/dd/yyyy format
+-   *dctr_6months:* Flag indicating if interviewee visited the doctor in the 6 months prior to the **interview_date**
+-   *zip_code:* Residential ZIP code of interviewee
+
+Let's start by setting up our environment.
+
+```{r,include=TRUE}
 
 here()
 ```
@@ -49,22 +96,19 @@ original_data <- rawdata
 colnames(rawdata)
 
 ```
-**What is gender modality?**
-Our codebook says gender modality denotes whether or not the respondent is transgender. 1 = transgender, 2 = cisgender. 
+
+**What is gender modality?** Our codebook says gender modality denotes whether or not the respondent is transgender. 1 = transgender, 2 = cisgender.
 
 Our codebook defines sexuality in the following:
 
-- 1 = Gay  
-- 2 = Lesbian  
-- 3 = Bisexual  
-- 4 = Queer  
-- 5 = Questioning  
-- 6 = Heterosexual  
+-   1 = Gay\
+-   2 = Lesbian\
+-   3 = Bisexual\
+-   4 = Queer\
+-   5 = Questioning\
+-   6 = Heterosexual
 
-
-
-Which columns are qualitative vs. quantitative?
-We can use glimpse() to preview and data types
+Which columns are qualitative vs. quantitative? We can use glimpse() to preview and data types
 
 ```{r glimpse rawdata}
 
@@ -78,6 +122,7 @@ We see a mixture of characters (qualitative variables) and integers (quantitativ
 We can also use the {visdat} package to visualize this information. {visdat} also shows us if there is missing data.
 
 #### Install, load, and use {visdat}
+
 ```{r visdat intro}
 
 #install.packages("visdat")
@@ -94,23 +139,21 @@ vis_miss(rawdata)
 
 The percentages next to each column name on top represent the percentage of missing values.
 
-
 ##### What issues do you see in the data after using glimpse() and visdat()?
 
-We see a small amount of NA values scattered throughout the dataframe and a few rows at the end. This suggests data were cut off at the bottom during extraction. 
-  
-  In this scenario, we do not have the resources to repull the full data. Therefore, we must filter out the NA's. Otherwise, try to find the resources to repull the dataframe to obtain all observations.
-  
-  As for the NA's scattered throughout the dataframe, we will need to investigate these NA's, normalize them so they are all in a standard format, and choose to either leave them or remove the entire observation if there is an NA.
-  
-The race_eth, latinx_hispanic, and interview_month columns loaded as integers. We want to change these to be characters since we will not run calculations on these categorical values. 
+We see a small amount of NA values scattered throughout the dataframe and a few rows at the end. This suggests data were cut off at the bottom during extraction.
+
+In this scenario, we do not have the resources to repull the full data. Therefore, we must filter out the NA's. Otherwise, try to find the resources to repull the dataframe to obtain all observations.
+
+As for the NA's scattered throughout the dataframe, we will need to investigate these NA's, normalize them so they are all in a standard format, and choose to either leave them or remove the entire observation if there is an NA.
+
+The race_eth, latinx_hispanic, and interview_month columns loaded as integers. We want to change these to be characters since we will not run calculations on these categorical values.
 
 We notice the same thing for gender and gender modality.
 
 ### Data Cleaning
 
 #### Convert Data Types
-
 
 We received an error message saying "NAs introduced by coercion." This appears naturally if we are manipulating a data column which contains NA's. It says some character strings are not properly formatted numbers and therefore could not be converted to the integer class. That is okay. We will address NA's in a later step.
 
@@ -121,7 +164,6 @@ Now, let's test the conversion to confirm age properly converted.
 glimpse(rawdata)
 
 ```
-
 
 ```{r confirm gender col update}
 
@@ -143,6 +185,7 @@ glimpse(rawdata)
 ```
 
 ##### Sexuality and dctr_6months
+
 ```{r convert sexuality variable and dctr_6months}
 #convert sexuality to char
 rawdata$sexuality <- as.character(rawdata$sexuality)
@@ -154,7 +197,7 @@ rawdata$dctr_6months <- as.character(rawdata$dctr_6months)
 glimpse(rawdata)
 ```
 
-##### race_eth, latinx_hispanic, and interview_month.
+##### race_eth, latinx_hispanic, and interview_month
 
 ```{r convert}
 #convert race_eth to char
@@ -188,7 +231,7 @@ Now that data types are properly converted, it is time to explore those NA's.
 
 #### Explore NAs
 
-Not all missing data look the same. Not all NA's are read in R as NA's and may translate as a character such as "#NA" or "n_a" instead. Consequently, using a function such as is.na() to isolate all NA's before confirming all NA's are properly read can mean bad data slip through the cracks.   
+Not all missing data look the same. Not all NA's are read in R as NA's and may translate as a character such as "#NA" or "n_a" instead. Consequently, using a function such as is.na() to isolate all NA's before confirming all NA's are properly read can mean bad data slip through the cracks.
 
 We can use a combination of {visdat}, unique(), and view() to isolate the different missing values.
 
@@ -199,17 +242,16 @@ vis_miss(rawdata)
 
 ```
 
-In addition to the bottom slice of NA's impacting all columns, we see isolated missing values in: 
+In addition to the bottom slice of NA's impacting all columns, we see isolated missing values in:
 
-- ID  
-- gender_string
-- race_eth  
-- location_string  
-- interview_year
-- zip_code
+-   ID\
+-   gender_string
+-   race_eth\
+-   location_string\
+-   interview_year
+-   zip_code
 
 We can use view() and unique() to determine how each missing values appear in R.
-
 
 **view() & unique()**
 
@@ -220,6 +262,7 @@ We can use view() and unique() to determine how each missing values appear in R.
 ##### Using view()
 
 **ID**
+
 ```{r use view() on ID}
 
 view(rawdata$ID)
@@ -246,6 +289,7 @@ unique(rawdata$location_string)
 
 
 ```
+
 We see a -99 value as well as many misspellings within the location_string column. We will add -99 to our list and work on normalizing the cities in a later section.
 
 ```{r NAs in ZIP code}
@@ -265,7 +309,6 @@ unique(rawdata$interview_year)
 ```
 
 We see "9999" and "null". We see invalid year entries, which will be normalized later.
-
 
 #### Clear NAs
 
@@ -294,6 +337,7 @@ library(naniar)
 ```
 
 ##### Normalize abnormal NA's and QA.
+
 ```{r}
 # convert all abnormal NAs to standard NAs 
 # use {naniar} to replace all values founds in the found_NA's list within the location_string, gender_string, interview_year, and ID cols 
@@ -317,7 +361,6 @@ rawdata %>% filter(is.na((ID)))
 ```
 
 We confirm all abnormal missing data are now standardized. Now, we need to make sure all date fields and location strings are clean.
-
 
 #### Normalize Age in order to filter people out later
 
@@ -351,6 +394,7 @@ guess_formats(rawdata$birth_date, c("mdy", "dmy", "ymd"))
 rawdata$birth_date <- format(mdy(rawdata$birth_date), "%m/%d/%Y")
 
 ```
+
 We receive a message saying "56 failed to parse." Let's check to see how many NA's we have now.
 
 ```{r}
@@ -364,9 +408,7 @@ NA's were generated in the process of trying to convert dates. Let's use guess_f
 
 We observe several variations of the location_string. We need to normalize the Chicago, Los Angeles, and New York City entries in order to properly filter them out.
 
-
 First, we need to determine which strings we need to normalize. Let's go city-by-city. Let's start with Chicago.
-
 
 ```{r}
 
@@ -393,9 +435,9 @@ unique(rawdata$location_string)
 
 #### Ensure ZIP codes are correct based on the location_string
 
-We need to ensure the ZIP codes make sense based on the city listed in the location_string column. Let's check out each ZIP code listed per city. We will retain records where both the ZIP code and the location_string align, and remove cases where they mismatch. 
+We need to ensure the ZIP codes make sense based on the city listed in the location_string column. Let's check out each ZIP code listed per city. We will retain records where both the ZIP code and the location_string align, and remove cases where they mismatch.
 
-####  Normalize Gender Modality
+#### Normalize Gender Modality
 
 ```{r}
 
@@ -411,13 +453,14 @@ We need to ensure the ZIP codes make sense based on the city listed in the locat
 
 ```
 
+### Next steps:
 
 #### Breakdown race_ethnicity and yn hispanic to get break down of Afro-Latinx folks
 
-#### Extract an analytical file that is clean but also includes non-Chicagoans 
+#### Extract an analytical file that is clean but also includes non-Chicagoans
 
 #### Filter out non-Chicagoans
 
-#### Filter out folks ages < 18 and > 40
+#### Filter out folks ages \< 18 and \> 40
 
 #### Filer out interviews before 2015

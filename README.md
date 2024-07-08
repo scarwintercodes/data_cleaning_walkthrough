@@ -1,4 +1,4 @@
-# data_cleaning_walkthrough
+# [data_cleaning_walkthrough](./DataCleaning_Example.html)
 
 _Before we can use our dataset to tell a story, we first need to make sure the words we use to tell the story make sense._
 

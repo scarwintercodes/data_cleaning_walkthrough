@@ -48,7 +48,11 @@ We will use a sample dataset containing interview respondents from Chicago, New 
     -   4 = Queer
     -   5 = Questioning
     -   6 = Heterosexual
--   *race_eth:* race-ethnicity, [see codebook for definitions]{.underline}
+-   *race_eth:* race-ethnicity
+    -   1 = White
+    -   2 = Black
+    -   3 = Hispanic/Latino
+    -   4 = Other
 -   *latinx_hispanic:* Yes/No flag Hispanic status
     -   1 = Yes
     -   0 = No

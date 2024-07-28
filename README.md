@@ -1,4 +1,4 @@
-Data Cleaning Walkthrough in R
+# Data Cleaning Walkthrough in R
 
 _Before we can use our dataset to tell a story, we first need to make sure the words we use to tell the story make sense._
 

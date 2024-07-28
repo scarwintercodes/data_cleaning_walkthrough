@@ -1,4 +1,4 @@
-# [data_cleaning_walkthrough](./DataCleaning_Example.html)
+Data Cleaning Walkthrough in R
 
 _Before we can use our dataset to tell a story, we first need to make sure the words we use to tell the story make sense._
 
@@ -18,7 +18,7 @@ We will use a sample dataset containing interview respondents from Chicago, New 
     -   Questioning
     -   Non-binary/Genderqueer/Third gender
     -   Prefer Not to Say
--   *gender_modality:* Flag denoting whether respondent identifies as transgender
+-   *gender_modality:* Flag denoting whether the respondent identifies as transgender
     -   1 = Transgender
     -   2 = Cisgender
 -   *sexuality:* Sexual Identity
